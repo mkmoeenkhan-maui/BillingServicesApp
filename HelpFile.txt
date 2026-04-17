@@ -1,0 +1,2 @@
+Firebase DB Secret key:
+xPY8AJjEF3p4wlE87OOt1v9whZiyI3jjudjMtXDR

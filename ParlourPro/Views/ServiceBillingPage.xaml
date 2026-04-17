@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ParlourPro.Views.ServiceBillingPage"
+             xmlns:vm="clr-namespace:ParlourPro.ViewModels"
+             xmlns:models="clr-namespace:ParlourPro.Models"
+             xmlns:sys="clr-namespace:System;assembly=netstandard"
+             x:DataType="vm:ServiceBillingViewModel"
+             Title="Billing"
+             BackgroundColor="{AppThemeBinding Light={StaticResource PageBG}, Dark={StaticResource PageBG_Dark}}">
+
+    <Grid RowDefinitions="Auto, *" Padding="0">
+
+        <HorizontalStackLayout Grid.Row="0" Spacing="15" Padding="15" BackgroundColor="{StaticResource Primary}">
+            <Frame CornerRadius="30" HeightRequest="60" WidthRequest="60" Padding="0" IsClippedToBounds="True" BorderColor="White">
+                <Image Source="parlour_logo.png" Aspect="AspectFill"/>
+            </Frame>
+            <VerticalStackLayout VerticalOptions="Center">
+                <Label Text="Glow &amp; Style" FontSize="20" FontAttributes="Bold" TextColor="White"/>
+                <Label Text="Premium Beauty Hub" FontSize="12" TextColor="White" Opacity="0.8"/>
+            </VerticalStackLayout>
+        </HorizontalStackLayout>
+
+        <!--<Border x:Name="ReceiptView" IsVisible="False"
+                    WidthRequest="350" 
+                    BackgroundColor="White" 
+                    Padding="20"
+                    TranslationX="-1000">
+            <VerticalStackLayout Spacing="10">
+                <Label Text="PARLOUR PRO" HorizontalOptions="Center" FontAttributes="Bold" FontSize="22" TextColor="Black"/>
+                <Label Text="Professional Beauty Services" HorizontalOptions="Center" FontSize="12" TextColor="Black"/>
+                <BoxView HeightRequest="1" Color="Black" Margin="0,5"/>
+
+                <HorizontalStackLayout Spacing="5">
+                    <Label Text="Customer:" FontAttributes="Bold" TextColor="Black"/>
+                    <Label Text="{Binding CustomerName}" TextColor="Black"/>
+                </HorizontalStackLayout>
+
+                <Label Text="{Binding Source={x:Static sys:DateTime.Now}, StringFormat='Date: {0:dd/MM/yyyy HH:mm}'}" FontSize="12" TextColor="Black"/>
+                <BoxView HeightRequest="1" Color="Black" Margin="0,5"/>
+
+                <CollectionView ItemsSource="{Binding CurrentBillItems}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:ServiceItem">
+                            <Grid ColumnDefinitions="*, Auto">
+                                <Label Text="{Binding Name}" TextColor="Black"/>
+                                <Label Grid.Column="1" Text="{Binding Price, StringFormat='₹{0}'}" TextColor="Black"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <BoxView HeightRequest="1" Color="Black" Margin="0,5"/>
+
+                <Grid ColumnDefinitions="*, Auto">
+                    <Label Text="Grand Total:" FontAttributes="Bold" FontSize="18" TextColor="Black"/>
+                    <Label Grid.Column="1" Text="{Binding FinalTotal, StringFormat='₹{0:N0}'}" FontAttributes="Bold" FontSize="18" TextColor="Black"/>
+                </Grid>
+
+                <Label Text="!!! Thanks &amp; Visit Again !!!" HorizontalOptions="Center" Margin="0,20,0,0" TextColor="Black"/>
+            </VerticalStackLayout>
+        </Border>-->
+        <Border x:Name="ReceiptView" 
+        IsVisible="False" 
+        BackgroundColor="White" 
+        WidthRequest="350" 
+        Padding="20"
+        VerticalOptions="Start" 
+        HorizontalOptions="Center">
+
+            <VerticalStackLayout Spacing="8">
+                <Label Text="GLOW &amp; STYLE" HorizontalOptions="Center" FontAttributes="Bold" FontSize="20" TextColor="Black"/>
+                <Label Text="Premium Beauty Hub" HorizontalOptions="Center" FontSize="10" TextColor="Black"/>
+                <BoxView HeightRequest="1" Color="Black" Margin="0,5"/>
+
+                <Label Text="{Binding CurrentBillNumber, StringFormat='Bill No: {0}'}" HorizontalOptions="Center" TextColor="Black" FontSize="12"/>
+                <Label Text="{Binding CustomerName, StringFormat='Customer: {0}'}" TextColor="Black" FontSize="12"/>
+                <Label Text="{Binding Mobile, StringFormat='Mobile: {0}'}" TextColor="Black" FontSize="12"/>
+                <Label Text="{Binding Source={x:Static sys:DateTime.Now}, StringFormat='Date: {0:dd/MM/yyyy HH:mm}'}" FontSize="10" TextColor="Black"/>
+
+                <BoxView HeightRequest="1" Color="Black" Margin="0,5"/>
+
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding CurrentBillItems}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:ServiceItem">
+                            <Grid ColumnDefinitions="*, Auto" Margin="0,2">
+                                <Label Text="{Binding Name}" TextColor="Black" FontSize="12"/>
+                                <Label Grid.Column="1" Text="{Binding Price, StringFormat='₹{0}'}" TextColor="Black" FontSize="12"/>
+                            </Grid>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+                <BoxView HeightRequest="1" Color="Black" Margin="0,5"/>
+
+                <Grid ColumnDefinitions="*, Auto">
+                    <Label Text="Grand Total" FontAttributes="Bold" FontSize="16" TextColor="Black"/>
+                    <Label Grid.Column="1" Text="{Binding FinalTotal, StringFormat='₹{0}'}" FontAttributes="Bold" FontSize="16" TextColor="Black"/>
+                </Grid>
+
+                <Label Text="--- Visit Again ---" HorizontalOptions="Center" Margin="0,15,0,0" FontSize="10" TextColor="Black"/>
+            </VerticalStackLayout>
+        </Border>
+        <!--<Border x:Name="ReceiptView" 
+                IsVisible="False" 
+                BackgroundColor="White" 
+                WidthRequest="350" 
+                VerticalOptions="Start" 
+                HorizontalOptions="Center">
+            <VerticalStackLayout Padding="20" Spacing="5" >
+                <Label Text="INVOICE" HorizontalOptions="Center" FontAttributes="Bold" FontSize="20" TextColor="Black"/>
+                <Label Text="{Binding CurrentBillNumber, StringFormat='Bill No: {0}'}" HorizontalOptions="Center" TextColor="Black"/>
+                <BoxView HeightRequest="1" Color="Black"/>
+
+                <Label Text="{Binding CustomerName, StringFormat='Customer: {0}'}" TextColor="Black"/>
+                <Label Text="{Binding Mobile, StringFormat='Mobile: {0}'}" TextColor="Black"/>
+                <Label Text="{Binding Source={x:Static sys:DateTime.Now}, StringFormat='Date: {0:dd/MM/yyyy HH:mm}'}" FontSize="11" TextColor="Black"/>
+
+                <BoxView HeightRequest="1" Color="Black" Margin="0,5"/>
+                <Label Text="{Binding FinalTotal, StringFormat='Total: ₹{0}'}" FontAttributes="Bold" FontSize="16" HorizontalOptions="End" TextColor="Black"/>
+            </VerticalStackLayout>
+        </Border>-->
+        
+        <ScrollView Grid.Row="1" Padding="20">
+            <VerticalStackLayout Spacing="20">
+
+                <Frame Style="{StaticResource FormCard}">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Customer Details" FontAttributes="Bold" TextColor="{StaticResource Primary}"/>
+                        <Entry Placeholder="Customer Name" Text="{Binding CustomerName}" Style="{StaticResource ModernEntry}" />
+                        <Entry Placeholder="Mobile Number" Keyboard="Telephone" Text="{Binding Mobile}" Style="{StaticResource ModernEntry}" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame Style="{StaticResource FormCard}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Add Service" FontAttributes="Bold" TextColor="{StaticResource Primary}"/>
+                        <Grid ColumnDefinitions="*, 80, Auto" ColumnSpacing="10">
+                            <Picker Title="Service" ItemsSource="{Binding MasterServices}" 
+                            ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding SelectedService}"                                
+                            TextColor="{AppThemeBinding Light={StaticResource PrimaryText}, Dark={StaticResource PrimaryText_Dark}}"/>
+                            <Entry Grid.Column="1" Placeholder="₹" Keyboard="Numeric" Text="{Binding CurrentPrice}" Style="{StaticResource ModernEntry}"/>
+                            <Button Grid.Column="2" Text="+" Command="{Binding AddToCartCommand}" 
+                            BackgroundColor="{StaticResource Primary}" CornerRadius="5" WidthRequest="45"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Label Text="Bill Items" FontAttributes="Bold" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+                <CollectionView ItemsSource="{Binding CurrentBillItems}" HeightRequest="200">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:ServiceItem">
+                            <SwipeView>
+                                <SwipeView.RightItems>
+                                    <SwipeItems>
+                                        <SwipeItem Text="Edit" 
+                                   BackgroundColor="Orange"
+                                   Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ServiceBillingViewModel}}, Path=EditCartItemCommand}"
+                                   CommandParameter="{Binding .}" />
+                                        <SwipeItem Text="Delete" 
+                                   BackgroundColor="Red"
+                                   Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ServiceBillingViewModel}}, Path=DeleteCartItemCommand}"
+                                   CommandParameter="{Binding .}" />
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+
+                                <Frame Margin="0,2" Padding="10" BorderColor="{StaticResource Primary}">
+                                    <Grid ColumnDefinitions="*, Auto" Padding="5">
+                                        <Label Text="{Binding Name}" 
+                               TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                               VerticalOptions="Center"/>
+                                        <Label Grid.Column="1" 
+                               Text="{Binding Price, StringFormat='₹{0}'}" 
+                               FontAttributes="Bold" 
+                               TextColor="{StaticResource Primary}"
+                               VerticalOptions="Center"/>
+                                    </Grid>
+                                </Frame>
+                            </SwipeView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <!--<CollectionView ItemsSource="{Binding CurrentBillItems}" HeightRequest="150">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:ServiceItem">
+                            <Grid ColumnDefinitions="*, Auto" Padding="10">
+                                <Label Text="{Binding Name}" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+                                <Label Grid.Column="1" Text="{Binding Price, StringFormat='₹{0}'}" FontAttributes="Bold" TextColor="{StaticResource Primary}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>-->
+
+                <Frame Style="{StaticResource FormCard}" Margin="0,10">
+                    <VerticalStackLayout Spacing="15">
+                        <Label Text="Taxes &amp; Offers" FontAttributes="Bold" TextColor="{StaticResource Primary}"/>
+
+                        <Grid ColumnDefinitions="*, *" ColumnSpacing="15">
+                            <VerticalStackLayout Grid.Column="0" Spacing="5">
+                                <Label Text="Discount (₹)" FontSize="12" Opacity="0.7"/>
+                                <Entry Text="{Binding Discount}" 
+                   Keyboard="Numeric" 
+                   Placeholder="0" 
+                   Style="{StaticResource ModernEntry}"/>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                <Label Text="GST Rate (%)" FontSize="12" Opacity="0.7"/>
+                                <Grid ColumnDefinitions="*, Auto">
+                                    <Entry Text="{Binding GstRate}" 
+                       Keyboard="Numeric" 
+                       IsEnabled="{Binding IsGstEnabled}"
+                       Style="{StaticResource ModernEntry}"/>
+                                    <CheckBox Grid.Column="1" IsChecked="{Binding IsGstEnabled}" Color="{StaticResource Primary}"/>
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark=#330015}" BorderColor="{StaticResource Primary}">
+                    <HorizontalStackLayout HorizontalOptions="End" Spacing="20">
+                        <Label Text="Total Amount:" VerticalOptions="Center" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+                        <Label Text="{Binding FinalTotal, StringFormat='₹{0:N0}'}" FontSize="24" FontAttributes="Bold" TextColor="{StaticResource Primary}"/>
+                    </HorizontalStackLayout>
+                </Frame>
+
+                <Button Text="Save Bill &amp; WhatsApp" 
+                Command="{Binding SaveAndPrintCommand}" 
+                CommandParameter="{x:Reference ReceiptView}"
+                BackgroundColor="{StaticResource Primary}" 
+                TextColor="White" 
+                HeightRequest="55"
+                CornerRadius="10"
+                FontAttributes="Bold"/>               
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+    
+</ContentPage>
