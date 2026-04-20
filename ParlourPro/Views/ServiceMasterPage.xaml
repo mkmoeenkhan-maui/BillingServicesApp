@@ -9,9 +9,9 @@
              BackgroundColor="{AppThemeBinding Light={StaticResource PageBG}, Dark={StaticResource PageBG_Dark}}">
     <Grid RowDefinitions="Auto, *" Padding="20" RowSpacing="20">
 
-        <Frame Style="{StaticResource FormCard}" BorderColor="{StaticResource Primary}">
+        <Frame Style="{StaticResource FormCard}" BorderColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryText_Dark}}">
             <VerticalStackLayout Spacing="10">
-                <Label Text="Add New Service" FontAttributes="Bold" TextColor="{StaticResource Primary}" FontSize="18"/>
+                <Label Text="Add New Service" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryText_Dark}}" FontSize="18"/>
 
                 <Entry Placeholder="Service Name (e.g., Hydra Facial)" 
                        Text="{Binding NewServiceName}" 
@@ -42,11 +42,11 @@
             </CollectionView.Header>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:ServiceMaster">
-                    <Frame Margin="0,5" Padding="15" BorderColor="{StaticResource Primary}" Opacity="0.9">
+                    <Frame Margin="0,5" Padding="15" BorderColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryText_Dark}}" Opacity="0.9">
                         <Grid ColumnDefinitions="*, Auto">
                             <Label Text="{Binding Name}" VerticalOptions="Center" FontSize="16" FontAttributes="Bold"/>
                             <Label Grid.Column="1" Text="{Binding Price, StringFormat='₹{0}'}" 
-                                   TextColor="{StaticResource Primary}" FontSize="18" FontAttributes="Bold"/>
+                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryText_Dark}}" FontSize="18" FontAttributes="Bold"/>
                         </Grid>
                     </Frame>
                 </DataTemplate>

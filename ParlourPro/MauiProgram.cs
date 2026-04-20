@@ -28,6 +28,9 @@ namespace ParlourPro
             builder.Services.AddTransient<ServiceMasterViewModel>();
             builder.Services.AddTransient<ServiceMasterPage>();
 
+            builder.Services.AddSingleton<DashboardPage>();
+            builder.Services.AddSingleton<DashboardViewModel>();
+
 #if DEBUG
             builder.Logging.AddDebug();
 #endif

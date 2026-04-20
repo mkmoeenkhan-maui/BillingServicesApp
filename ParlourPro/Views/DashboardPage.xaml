@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ParlourPro.Views.DashboardPage"
+             xmlns:vm="clr-namespace:ParlourPro.ViewModels"
+             x:DataType="vm:DashboardViewModel"
+             Shell.NavBarIsVisible="False"
+             Title="Home"
+             BackgroundColor="{AppThemeBinding Light={StaticResource PageBG}, Dark={StaticResource PageBG_Dark}}">
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <Grid ColumnDefinitions="*, Auto" Margin="0,15,0,10">
+                <VerticalStackLayout Grid.Column="0" Spacing="0">
+                    <Label Text="Biz Bill" 
+               FontSize="28" 
+               FontAttributes="Bold" 
+               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryText_Dark}}" 
+               FontFamily="OpenSansBold"/>
+
+                    <Label Text="Quick &amp; Smart Billing | Services &amp; Academy Manager" 
+               FontSize="12" 
+               TextColor="DarkGray" 
+               FontAttributes="Italic"
+               Margin="2,0,0,0"/>
+                </VerticalStackLayout>
+
+                <Frame Grid.Column="1" HeightRequest="40" WidthRequest="40" CornerRadius="20" Padding="0" BorderColor="AliceBlue" VerticalOptions="Start">
+                    <Image Source="bizzbilllogo1.png" Aspect="AspectFill"/>
+                </Frame>
+            </Grid>
+
+            <Border StrokeShape="RoundRectangle 20" Padding="25" BackgroundColor="{StaticResource Primary}" StrokeThickness="0">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Today's Collection" TextColor="White" FontAttributes="Bold"/>
+                    <Label Text="{Binding TodayEarning}" FontSize="32" FontAttributes="Bold" TextColor="White"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Text="Services &amp; Billing" FontAttributes="Bold" FontSize="16" Margin="0,10,0,0"/>
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                <Border Grid.Column="0" StrokeShape="RoundRectangle 12" StrokeThickness="1"
+            Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E293B}"
+            HeightRequest="90">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoToBillingCommand}"/>
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout VerticalOptions="Center" Spacing="5">
+                        <Label Text="📄" FontSize="24" HorizontalOptions="Center"/>
+                        <Label Text="New Bill" FontAttributes="Bold" HorizontalOptions="Center"
+                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryText_Dark}}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Column="1" StrokeShape="RoundRectangle 12" StrokeThickness="1"
+            Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E293B}"
+            HeightRequest="90">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ManageServicesCommand}"/>
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout VerticalOptions="Center" Spacing="5">
+                        <Label Text="⚙️" FontSize="24" HorizontalOptions="Center"/>
+                        <Label Text="Services" FontAttributes="Bold" HorizontalOptions="Center"
+                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryText_Dark}}"/>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <Label Text="Academy Management" FontAttributes="Bold" FontSize="16" Margin="0,10,0,0"/>
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+
+                <Border Grid.Column="0" 
+            StrokeShape="RoundRectangle 12" 
+            StrokeThickness="1"
+            Stroke="{AppThemeBinding Light={StaticResource CardBorder}, Dark={StaticResource CardBorder_Dark}}"
+            BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource CardBG_Dark}}"
+            HeightRequest="100">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding AddStudentCommand}"/>
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout VerticalOptions="Center" Spacing="8">
+                        <Label Text="🎓" FontSize="28" HorizontalOptions="Center"/>
+                        <Label Text="Admission" 
+                   FontAttributes="Bold" 
+                   HorizontalOptions="Center"
+                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryText_Dark}}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Column="1" 
+            StrokeShape="RoundRectangle 12" 
+            StrokeThickness="1"
+            Stroke="{AppThemeBinding Light={StaticResource CardBorder}, Dark={StaticResource CardBorder_Dark}}"
+            BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource CardBG_Dark}}"
+            HeightRequest="100">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding AddStudentCommand}"/>
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout VerticalOptions="Center" Spacing="8">
+                        <Label Text="📜" FontSize="28" HorizontalOptions="Center"/>
+                        <Label Text="Certificates" 
+                   FontAttributes="Bold" 
+                   HorizontalOptions="Center"
+                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryText_Dark}}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

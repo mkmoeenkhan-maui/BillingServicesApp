@@ -8,13 +8,8 @@
     Shell.FlyoutBehavior="Disabled"
     Title="ParlourPro">
 
-    <!--<ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
-    DataTemplate views:MainPage
-    -->
-    <TabBar>
+    
+    <!--<TabBar>
         <Tab Title="Parlour" Icon="appicon.png">
             <ShellContent Title="Billing" ContentTemplate="{DataTemplate views:ServiceBillingPage}" />
             <ShellContent Title="History" ContentTemplate="{DataTemplate views:ServiceBillingPage}" />
@@ -24,6 +19,12 @@
 
         <Tab Title="Academy" Icon="appicon.png">
             <ShellContent Title="Courses" ContentTemplate="{DataTemplate local:MainPage}" />
+        </Tab>
+    </TabBar>-->
+
+    <TabBar>
+        <Tab Title="Dashboard" Icon="home_icon.png">
+            <ShellContent ContentTemplate="{DataTemplate views:DashboardPage}" />
         </Tab>
     </TabBar>
 
