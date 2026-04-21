@@ -69,8 +69,8 @@
         HorizontalOptions="Center">
 
             <VerticalStackLayout Spacing="8">
-                <Label Text="GLOW &amp; STYLE" HorizontalOptions="Center" FontAttributes="Bold" FontSize="20" TextColor="Black"/>
-                <Label Text="Premium Beauty Hub" HorizontalOptions="Center" FontSize="10" TextColor="Black"/>
+                <Label Text="Biz Bill" HorizontalOptions="Center" FontAttributes="Bold" FontSize="20" TextColor="Black"/>
+                <Label Text="Quick &amp; Smart Billing | Services &amp; Academy Manager" HorizontalOptions="Center" FontSize="10" TextColor="Black"/>
                 <BoxView HeightRequest="1" Color="Black" Margin="0,5"/>
 
                 <Label Text="{Binding CurrentBillNumber, StringFormat='Bill No: {0}'}" HorizontalOptions="Center" TextColor="Black" FontSize="12"/>

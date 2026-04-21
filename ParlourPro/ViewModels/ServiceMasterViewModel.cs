@@ -8,18 +8,19 @@ namespace ParlourPro.ViewModels
 {
     public partial class ServiceMasterViewModel : ObservableObject
     {
-        private readonly FirebaseService _firebaseService;
+        // Replaced FirebaseService with DatabaseService
+        private readonly DatabaseService _databaseService;
 
         [ObservableProperty] string newServiceName;
         [ObservableProperty] string newServiceRate;
         [ObservableProperty] bool isBusy;
 
-        public ObservableCollection<ServiceMaster> MasterServices { get; } = new();
+        public ObservableCollection<ServiceItem> MasterServices { get; } = new();
 
-        public ServiceMasterViewModel(FirebaseService firebaseService)
+        public ServiceMasterViewModel(DatabaseService databaseService)
         {
-            _firebaseService = firebaseService;
-            LoadServicesCommand.Execute(null); // Page khulte hi data load karo
+            _databaseService = databaseService;
+            LoadServicesCommand.Execute(null); // Data Load on Page Init
         }
 
         [RelayCommand]
@@ -28,9 +29,13 @@ namespace ParlourPro.ViewModels
             IsBusy = true;
             try
             {
-                var services = await _firebaseService.GetServices();
+                // Fetch from local SQLite
+                var services = await _databaseService.GetServicesAsync();
                 MasterServices.Clear();
-                foreach (var s in services) MasterServices.Add(s);
+                foreach (var s in services)
+                {
+                    MasterServices.Add(s);
+                }
             }
             finally { IsBusy = false; }
         }
@@ -44,17 +49,50 @@ namespace ParlourPro.ViewModels
                 return;
             }
 
-            IsBusy = true;
-            var service = new ServiceMaster { Name = NewServiceName, Price = rate };
+            // DUPLICATE CHECK: Check if service name already exists in the list (case-insensitive)
+            bool exists = MasterServices.Any(x => x.Name.Trim().ToLower() == NewServiceName.Trim().ToLower());
 
-            await _firebaseService.AddService(service);
+            if (!exists)
+            {
+                IsBusy = true;
+                var service = new ServiceItem { Name = NewServiceName, Price = rate };
 
-            // UI reset aur refresh
-            NewServiceName = string.Empty;
-            NewServiceRate = string.Empty;
-            await LoadServices();
+                // Save to SQLite and trigger background Drive sync
+                await _databaseService.SaveServiceAsync(service);
 
-            IsBusy = false;
+                // UI reset aur refresh
+                NewServiceName = string.Empty;
+                NewServiceRate = string.Empty;
+                await LoadServices();
+
+                IsBusy = false;
+            }
+            
+        }
+
+        [RelayCommand]
+        async Task DeleteService(ServiceItem item)
+        {
+            if (item == null) return;
+
+            bool confirm = await Shell.Current.DisplayAlert("Delete", $"Do you want to delete {item.Name}?", "Yes", "No");
+            if (confirm)
+            {
+                IsBusy = true;
+                try
+                {
+                    // 1. Delete from SQLite
+                    await _databaseService.DeleteServiceAsync(item);
+
+                    // 2. Remove from the UI list
+                    MasterServices.Remove(item);
+                }
+                catch (Exception ex)
+                {
+                    await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+                }
+                finally { IsBusy = false; }
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CommunityToolkit.Maui;
+using Microsoft.Extensions.Logging;
 using ParlourPro.Services;
 using ParlourPro.ViewModels;
 using ParlourPro.Views;
@@ -12,6 +13,7 @@ namespace ParlourPro
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit() // Ye line add karein
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -30,6 +32,7 @@ namespace ParlourPro
 
             builder.Services.AddSingleton<DashboardPage>();
             builder.Services.AddSingleton<DashboardViewModel>();
+            builder.Services.AddSingleton<DatabaseService>();
 
 #if DEBUG
             builder.Logging.AddDebug();

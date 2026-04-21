@@ -28,7 +28,7 @@ namespace ParlourPro.Services
         public async Task DeleteService(string id) =>
             await _client.Child("Services").Child(id).DeleteAsync();
         
-        // Saari Services load karne ke liye
+        // Load all Services
         public async Task<List<ServiceMaster>> GetServices()
         {
             var services = await _client.Child("Services").OnceAsync<ServiceMaster>();

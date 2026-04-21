@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="ParlourPro.Views.ServiceMasterPage"
              xmlns:vm="clr-namespace:ParlourPro.ViewModels"
              xmlns:models="clr-namespace:ParlourPro.Models"
@@ -41,12 +42,24 @@
                 <Label Text="Active Service Menu" FontAttributes="Bold" Margin="0,10" FontSize="16"/>
             </CollectionView.Header>
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:ServiceMaster">
+                <DataTemplate x:DataType="models:ServiceItem">
                     <Frame Margin="0,5" Padding="15" BorderColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryText_Dark}}" Opacity="0.9">
-                        <Grid ColumnDefinitions="*, Auto">
+                        <Grid ColumnDefinitions="*, Auto, Auto">
                             <Label Text="{Binding Name}" VerticalOptions="Center" FontSize="16" FontAttributes="Bold"/>
                             <Label Grid.Column="1" Text="{Binding Price, StringFormat='₹{0}'}" 
                                    TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryText_Dark}}" FontSize="18" FontAttributes="Bold"/>
+                            
+                            <ImageButton Grid.Column="2"
+                                 Source="delete_icon.png" 
+                                 HeightRequest="25"
+                                 WidthRequest="25"
+                                 VerticalOptions="Center"
+                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ServiceMasterViewModel}}, Path=DeleteServiceCommand}"
+                                 CommandParameter="{Binding .}">
+                                <ImageButton.Behaviors>
+                                    <toolkit:IconTintColorBehavior TintColor="Crimson" />
+                                </ImageButton.Behaviors>
+                            </ImageButton>
                         </Grid>
                     </Frame>
                 </DataTemplate>
