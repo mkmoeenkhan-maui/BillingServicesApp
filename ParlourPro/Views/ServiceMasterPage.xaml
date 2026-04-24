@@ -8,9 +8,18 @@
              x:DataType="vm:ServiceMasterViewModel"
              Title="Manage Services"
              BackgroundColor="{AppThemeBinding Light={StaticResource PageBG}, Dark={StaticResource PageBG_Dark}}">
-    <Grid RowDefinitions="Auto, *" Padding="20" RowSpacing="20">
+    <Grid RowDefinitions="Auto, Auto,*" Padding="20" RowSpacing="20">
+        <HorizontalStackLayout Grid.Row="0" Spacing="15" Padding="15" BackgroundColor="{StaticResource Primary}">
+            <Frame HeightRequest="40" WidthRequest="40" CornerRadius="20" Padding="0" BorderColor="LightGray" VerticalOptions="Start">
+                <Image Source="bizzbilllogo1.png" Aspect="AspectFill"/>
+            </Frame>
+            <VerticalStackLayout VerticalOptions="Center">
+                <Label Text="Biz Bill" FontSize="20" FontAttributes="Bold" TextColor="White"/>
+                <Label Text="Quick &amp; Smart Billing | Services &amp; Academy Manager" FontSize="12" TextColor="White" Opacity="0.8"/>
+            </VerticalStackLayout>
+        </HorizontalStackLayout>
 
-        <Frame Style="{StaticResource FormCard}" BorderColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryText_Dark}}">
+        <Frame Grid.Row="1" Style="{StaticResource FormCard}" BorderColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryText_Dark}}">
             <VerticalStackLayout Spacing="10">
                 <Label Text="Add New Service" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryText_Dark}}" FontSize="18"/>
 
@@ -37,29 +46,44 @@
             </VerticalStackLayout>
         </Frame>
 
-        <CollectionView Grid.Row="1" ItemsSource="{Binding MasterServices}">
+        <CollectionView Grid.Row="2" ItemsSource="{Binding MasterServices}">
             <CollectionView.Header>
                 <Label Text="Active Service Menu" FontAttributes="Bold" Margin="0,10" FontSize="16"/>
             </CollectionView.Header>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:ServiceItem">
-                    <Frame Margin="0,5" Padding="15" BorderColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryText_Dark}}" Opacity="0.9">
-                        <Grid ColumnDefinitions="*, Auto, Auto">
-                            <Label Text="{Binding Name}" VerticalOptions="Center" FontSize="16" FontAttributes="Bold"/>
-                            <Label Grid.Column="1" Text="{Binding Price, StringFormat='₹{0}'}" 
-                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryText_Dark}}" FontSize="18" FontAttributes="Bold"/>
-                            
-                            <ImageButton Grid.Column="2"
-                                 Source="delete_icon.png" 
-                                 HeightRequest="25"
-                                 WidthRequest="25"
-                                 VerticalOptions="Center"
-                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ServiceMasterViewModel}}, Path=DeleteServiceCommand}"
-                                 CommandParameter="{Binding .}">
-                                <ImageButton.Behaviors>
-                                    <toolkit:IconTintColorBehavior TintColor="Crimson" />
-                                </ImageButton.Behaviors>
-                            </ImageButton>
+                    <Frame Margin="0,5" Padding="12" CornerRadius="10" HasShadow="False"
+               BorderColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryText_Dark}}">
+
+                        <Grid ColumnDefinitions="*, 80, 50" VerticalOptions="Center">
+
+                            <Label Text="{Binding Name}" 
+                       VerticalOptions="Center" 
+                       FontSize="16" 
+                       FontAttributes="Bold"
+                       LineBreakMode="TailTruncation"
+                       Grid.Column="0"/>
+
+                            <Label Grid.Column="1" 
+                       Text="{Binding Price, StringFormat='₹{0}'}" 
+                       VerticalOptions="Center"
+                       HorizontalOptions="End"
+                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryText_Dark}}" 
+                       FontSize="16" 
+                       FontAttributes="Bold"/>
+
+                            <Button Grid.Column="2"
+                        Text="🗑"                                        
+                        FontSize="18"
+                        BackgroundColor="Transparent" 
+                        TextColor="Crimson"
+                        WidthRequest="40"
+                        HeightRequest="40"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Padding="0"
+                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ServiceMasterViewModel}}, Path=DeleteServiceCommand}"
+                        CommandParameter="{Binding .}" />
                         </Grid>
                     </Frame>
                 </DataTemplate>
@@ -71,6 +95,6 @@
             </CollectionView.EmptyView>
         </CollectionView>
 
-        <ActivityIndicator Grid.RowSpan="2" IsRunning="{Binding IsBusy}" VerticalOptions="Center" HorizontalOptions="Center" Color="{StaticResource Primary}"/>
+        <ActivityIndicator Grid.RowSpan="3" IsRunning="{Binding IsBusy}" VerticalOptions="Center" HorizontalOptions="Center" Color="{StaticResource Primary}"/>
     </Grid>
 </ContentPage>

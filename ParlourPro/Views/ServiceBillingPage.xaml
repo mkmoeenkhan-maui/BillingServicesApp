@@ -86,6 +86,14 @@
                             <Grid ColumnDefinitions="*, Auto" Margin="0,2">
                                 <Label Text="{Binding Name}" TextColor="Black" FontSize="12"/>
                                 <Label Grid.Column="1" Text="{Binding Price, StringFormat='₹{0}'}" TextColor="Black" FontSize="12"/>
+
+                                <!--<ImageButton Grid.Column="2" Source="delete_icon.png" HeightRequest="20"
+                                     Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ServiceBillingViewModel}}, Path=DeleteCartItemCommand}"
+                                     CommandParameter="{Binding .}">
+                                    <ImageButton.Behaviors>
+                                        <toolkit:IconTintColorBehavior TintColor="Crimson" />
+                                    </ImageButton.Behaviors>
+                                </ImageButton>-->
                             </Grid>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
@@ -149,25 +157,35 @@
 
                 <Label Text="Bill Items" FontAttributes="Bold" Margin="0,10,0,5" 
        TextColor="{AppThemeBinding Light={StaticResource PrimaryText}, Dark={StaticResource PrimaryText_Dark}}"/>
-                
+
                 <VerticalStackLayout BindableLayout.ItemsSource="{Binding CurrentBillItems}" Spacing="8">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="models:ServiceItem">
-                            <Border StrokeShape="RoundRectangle 12" 
-                    Stroke="{AppThemeBinding Light={StaticResource CardBorder}, Dark={StaticResource CardBorder_Dark}}"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource CardBG}, Dark={StaticResource CardBG_Dark}}"
-                    Padding="15">
-                                <Grid ColumnDefinitions="*, Auto">
+                            <Border StrokeShape="RoundRectangle 12" Padding="10">
+                                <Grid ColumnDefinitions="*, Auto, Auto" ColumnSpacing="10">
+
                                     <Label Text="{Binding Name}" VerticalOptions="Center" 
                            TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+
                                     <Label Grid.Column="1" Text="{Binding Price, StringFormat='₹{0}'}" 
-                           FontAttributes="Bold" TextColor="{StaticResource Primary}"/>
+                           FontAttributes="Bold" VerticalOptions="Center"
+                           TextColor="Teal"/>
+                                    <Button Grid.Column="2"
+                            Text="🗑"                                        
+                            FontSize="18"
+                            BackgroundColor="Transparent" 
+                            TextColor="Crimson"
+                            WidthRequest="45"
+                            HeightRequest="40"
+                            Padding="0"
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ServiceBillingViewModel}}, Path=DeleteCartItemCommand}"
+                            CommandParameter="{Binding .}" />
                                 </Grid>
                             </Border>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
                 </VerticalStackLayout>
-                
+
                 <!--<Label Text="Bill Items" FontAttributes="Bold" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>-->
                 <!--<CollectionView ItemsSource="{Binding CurrentBillItems}" VerticalOptions="Start">
                     <CollectionView.ItemTemplate>

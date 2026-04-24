@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Newtonsoft.Json;
 using ParlourPro.Models;
 using ParlourPro.Services;
 using System;
@@ -227,6 +228,7 @@ namespace ParlourPro.ViewModels
         {
             if (receiptLayout == null || CurrentBillItems.Count == 0) return;
 
+            string filePath = string.Empty; // Initialize filePath here for broader scope
             IsBusy = true;
             try
             {
@@ -242,55 +244,80 @@ namespace ParlourPro.ViewModels
                     GrandTotal = FinalTotal,
                     SelectedServices = CurrentBillItems.ToList(),
                     EntryDate = DateTime.Now,
-                    IsSynced = false
+                    IsSynced = false,
+                    // CRITICAL: Convert the list to JSON string before saving
+                    ServicesJson = JsonConvert.SerializeObject(CurrentBillItems.ToList())
                 };
 
                 // Step 3: Save locally to SQLite
-                var res = await _databaseService.SaveBillAsync(billEntry);
+                int res = await _databaseService.SaveBillAsync(billEntry);
 
-                // Step 4: Handle Screenshot with safety delay
-                receiptLayout.IsVisible = true;
-                await Task.Delay(500); // Increased delay to prevent null reference on CaptureAsync
-
-                IScreenshotResult screenshot = await receiptLayout.CaptureAsync();
-                if (screenshot == null) throw new Exception("Failed to capture receipt screenshot.");
-
-                string filePath = Path.Combine(FileSystem.CacheDirectory, "invoice.png");
-                using (Stream fileStream = File.Create(filePath))
+                // Inside SaveAndPrint Task after successful save:
+                if (res > 0)
                 {
-                    await screenshot.CopyToAsync(fileStream);
+                    // Step 4: Handle Screenshot with safety delay
+                    receiptLayout.IsVisible = true;
+                    await Task.Delay(500); // Increased delay to prevent null reference on CaptureAsync
+
+                    IScreenshotResult screenshot = await receiptLayout.CaptureAsync();
+                    if (screenshot == null) throw new Exception("Failed to capture receipt screenshot.");
+
+                    filePath = Path.Combine(FileSystem.CacheDirectory, "invoice.png");
+                    using (Stream fileStream = File.Create(filePath))
+                    {
+                        await screenshot.CopyToAsync(fileStream);
+                    }
+
+                    // Step 5: WhatsApp Logic
+                    string message = $"Hello {CustomerName}! ✨\n\n" +
+                                     $"Thank you for visiting. Your bill {CurrentBillNumber} is ready.\n" +
+                                     $"Total Amount: ₹{FinalTotal}";
+
+                    string url = $"whatsapp://send?phone=91{Mobile}&text={Uri.EscapeDataString(message)}";
+                    
+
+                    bool canOpenWhatsApp = await Launcher.Default.CanOpenAsync(url);
+
+                    if (canOpenWhatsApp)
+                    {
+                        await Launcher.Default.OpenAsync(url);
+                    }
+                    else
+                    {
+                        // 2. If WhatsApp not found, try SMS
+                        await Launcher.Default.OpenAsync($"sms:{Mobile}?body={Uri.EscapeDataString(message)}");
+                    }
+
+                    // Step 6: Share Receipt Image
+                    await Share.Default.RequestAsync(new ShareFileRequest
+                    {
+                        Title = "Share Bill",
+                        File = new ShareFile(filePath)
+                    });
+
+                    //await Shell.Current.DisplayAlert("Success", "Bill saved and form cleared!", "OK");
+                    // Reset for next customer
+                    CurrentBillItems.Clear();
+                    CustomerName = string.Empty;
+                    Mobile = string.Empty;
+                    RefreshTotal();
+
+                    // Clear the UI for the next customer
+                    ResetForm();
                 }
-
-                // Step 5: WhatsApp Logic
-                string message = $"Hello {CustomerName}! ✨\n\n" +
-                                 $"Thank you for visiting. Your bill {CurrentBillNumber} is ready.\n" +
-                                 $"Total Amount: ₹{FinalTotal}\n\n" +
-                                 $"Sharing digital invoice below. 🙏";
-
-                string url = $"whatsapp://send?phone=91{Mobile}&text={Uri.EscapeDataString(message)}";
-                await Launcher.Default.OpenAsync(url);
-
-                // Step 6: Share Receipt Image
-                await Share.Default.RequestAsync(new ShareFileRequest
-                {
-                    Title = "Share Receipt",
-                    File = new ShareFile(filePath)
-                });
-
-                // Reset for next customer
-                CurrentBillItems.Clear();
-                CustomerName = string.Empty;
-                Mobile = string.Empty;
-                RefreshTotal();
+                
             }
             catch (Exception ex)
             {
-                await Shell.Current.DisplayAlert("Error", "Save failed: " + ex.Message, "OK");
+                //await Shell.Current.DisplayAlert("Error", "Save failed: " + ex.Message, "OK");
+                // 3. Last fallback: Just open the Share Sheet
+                await Share.Default.RequestAsync(new ShareFileRequest { Title = "Share Bill", File = new ShareFile(filePath) });
             }
             finally
             {
                 IsBusy = false;
                 receiptLayout.IsVisible = false;
+                ResetForm();
             }
         }
 
@@ -338,6 +365,18 @@ namespace ParlourPro.ViewModels
                 // Handle or log potential connection errors
                 System.Diagnostics.Debug.WriteLine($"Error loading services: {ex.Message}");
             }
+        }
+
+        // Method to reset the entire form after saving
+        private void ResetForm()
+        {
+            CustomerName = string.Empty;
+            Mobile = string.Empty;
+            CurrentBillItems.Clear();
+            Discount = 0;
+            IsGstEnabled = false;
+            FinalTotal = 0;
+            CurrentBillNumber = string.Empty;
         }
     }
 }

@@ -34,6 +34,11 @@ namespace ParlourPro
             builder.Services.AddSingleton<DashboardViewModel>();
             builder.Services.AddSingleton<DatabaseService>();
 
+            builder.Services.AddTransient<BillDetailsPage>();
+            builder.Services.AddTransient<BillDetailsViewModel>();
+            builder.Services.AddTransient<HistoryPage>();
+            builder.Services.AddTransient<HistoryViewModel>();
+
 #if DEBUG
             builder.Logging.AddDebug();
 #endif

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:ParlourPro.Models"
+             x:Class="ParlourPro.Views.HistoryPage"
+             xmlns:vm="clr-namespace:ParlourPro.ViewModels"
+             Title="History"
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="{AppThemeBinding Light={StaticResource PageBG}, Dark={StaticResource PageBG_Dark}}">
+    <Grid RowDefinitions="Auto, *">
+        <HorizontalStackLayout Grid.Row="0" Spacing="15" Padding="15" BackgroundColor="{StaticResource Primary}">
+            <Frame HeightRequest="40" WidthRequest="40" CornerRadius="20" Padding="0" BorderColor="LightGray" VerticalOptions="Start">
+                <Image Source="bizzbilllogo1.png" Aspect="AspectFill"/>
+            </Frame>
+            <VerticalStackLayout VerticalOptions="Center">
+                <Label Text="Biz Bill" FontSize="20" FontAttributes="Bold" TextColor="White"/>
+                <Label Text="Quick &amp; Smart Billing | Services &amp; Academy Manager" FontSize="12" TextColor="White" Opacity="0.8"/>
+            </VerticalStackLayout>
+        </HorizontalStackLayout>
+
+        <VerticalStackLayout Grid.Row="1" Padding="15" Spacing="10">
+            <SearchBar x:Name="searchBar" Placeholder="Search Name or Bill ID..." 
+                       SearchCommand="{Binding SearchCommand}" 
+                       SearchCommandParameter="{Binding Source={x:Reference searchBar}, Path=Text}" />
+
+            <CollectionView ItemsSource="{Binding BillHistory}" VerticalOptions="FillAndExpand">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:ServiceEntry">
+                        <Frame Margin="0,5" Padding="15" CornerRadius="12" BorderColor="Transparent"
+                               BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource CardBG_Dark}}">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HistoryViewModel}}, Path=ViewBillDetailsCommand}" CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
+                            <Grid ColumnDefinitions="*, Auto">
+                                <VerticalStackLayout Grid.Column="0">
+                                    <Label Text="{Binding CustomerName}" FontSize="18" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}"/>
+                                    <Label Text="{Binding BillId}" FontSize="12" TextColor="Gray"/>
+                                </VerticalStackLayout>
+                                <Label Grid.Column="1" Text="{Binding GrandTotal, StringFormat='₹{0:N0}'}" FontSize="18" FontAttributes="Bold" TextColor="Teal" VerticalOptions="Center"/>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

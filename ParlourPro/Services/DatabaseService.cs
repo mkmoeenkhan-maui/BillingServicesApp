@@ -1,6 +1,7 @@
 ﻿using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
 using Google.Apis.Services;
+using Newtonsoft.Json;
 using ParlourPro.Models;
 using SQLite;
 using System;
@@ -201,6 +202,48 @@ namespace ParlourPro.Services
             await Init();
             // Deletes the item from SQLite using its Primary Key (Id)
             return await _database.DeleteAsync(item);
+        }
+
+        // Get total for a specific date range
+        public async Task<double> GetCollectionAsync(DateTime startDate, DateTime endDate)
+        {
+            await Init();
+            var bills = await _database.Table<ServiceEntry>()
+                                       .Where(x => x.EntryDate >= startDate && x.EntryDate <= endDate)
+                                       .ToListAsync();
+            return bills.Sum(x => x.GrandTotal);
+        }
+
+        // Fetches bill history with a default 2-month filter and optional search text
+        public async Task<List<ServiceEntry>> GetBillHistoryAsync(string searchText = "")
+        {
+            await Init();
+
+            // Default: Show last 2 months of records
+            DateTime dateLimit = DateTime.Now.AddMonths(-2);
+
+            var query = _database.Table<ServiceEntry>()
+                                 .Where(x => x.EntryDate >= dateLimit);
+
+            if (!string.IsNullOrWhiteSpace(searchText))
+            {
+                string search = searchText.ToLower();
+                // Filter by Customer Name or Bill ID
+                query = query.Where(x => x.CustomerName.ToLower().Contains(search) ||
+                                         x.BillId.ToLower().Contains(search));
+            }
+
+            // Sort by newest first
+            var results = await query.OrderByDescending(x => x.EntryDate).ToListAsync();
+
+            // Deserialize JSON items back to the list for UI display
+            foreach (var bill in results)
+            {
+                if (!string.IsNullOrEmpty(bill.ServicesJson))
+                    bill.SelectedServices = JsonConvert.DeserializeObject<List<ServiceItem>>(bill.ServicesJson);
+            }
+
+            return results;
         }
     }
 }

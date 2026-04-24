@@ -39,5 +39,8 @@ namespace ParlourPro.Models
         // but it can still be used for the UI/WhatsApp.
         [Ignore]
         public List<ServiceItem> SelectedServices { get; set; }
+
+        // Actual string stored in SQLite
+        public string ServicesJson { get; set; }
     }
 }

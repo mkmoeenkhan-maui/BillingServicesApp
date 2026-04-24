@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ParlourPro.Views.BillDetailsPage"
+             xmlns:models="clr-namespace:ParlourPro.Models"
+             Title="Bill Details"
+             NavigationPage.HasNavigationBar="False">
+    <ScrollView Padding="20">
+        <Frame BackgroundColor="White" BorderColor="#DDD" CornerRadius="0" Padding="30">
+            <VerticalStackLayout Spacing="15">
+                <Label Text="Biz Bill" FontSize="26" HorizontalOptions="Center" FontAttributes="Bold" TextColor="Black"/>
+                <Label Text="Quick &amp; Smart Billing | Services &amp; Academy Manager" HorizontalOptions="Center" TextColor="Black"/>
+
+                <BoxView HeightRequest="1" Color="Black" Margin="0,10"/>
+
+                <Label Text="{Binding Bill.BillId, StringFormat='Bill No: {0}'}" HorizontalOptions="Center" TextColor="Black"/>
+                <Label Text="{Binding Bill.CustomerName, StringFormat='Customer: {0}'}" TextColor="Black"/>
+                <Label Text="{Binding Bill.Mobile, StringFormat='Mobile: {0}'}" TextColor="Black"/>
+                <Label Text="{Binding Bill.EntryDate, StringFormat='Date: {0:dd/MM/yyyy HH:mm}'}" TextColor="Black"/>
+
+                <BoxView HeightRequest="1" Color="Black" Margin="0,10"/>
+
+                <CollectionView ItemsSource="{Binding Bill.SelectedServices}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:ServiceItem">
+                            <Grid ColumnDefinitions="*, Auto" Padding="0,5">
+                                <Label Text="{Binding Name}" TextColor="Black" FontSize="16"/>
+                                <Label Grid.Column="1" Text="{Binding Price, StringFormat='₹{0}'}" TextColor="Black" FontSize="16"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <BoxView HeightRequest="1" Color="Black" Margin="0,10"/>
+
+                <Grid ColumnDefinitions="*, Auto">
+                    <Label Text="Grand Total" FontSize="22" FontAttributes="Bold" TextColor="Black"/>
+                    <Label Grid.Column="1" Text="{Binding Bill.GrandTotal, StringFormat='₹{0}'}" FontSize="22" FontAttributes="Bold" TextColor="Black"/>
+                </Grid>
+
+                <Label Text="--- Visit Again ---" HorizontalOptions="Center" Margin="0,40,0,0" TextColor="Black"/>
+            </VerticalStackLayout>
+        </Frame>
+    </ScrollView>
+</ContentPage>
