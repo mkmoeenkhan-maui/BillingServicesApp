@@ -42,5 +42,8 @@ namespace ParlourPro.Models
 
         // Actual string stored in SQLite
         public string ServicesJson { get; set; }
+
+        // Added to handle bill status: Active, Cancelled
+        public string Status { get; set; } = "Active";
     }
 }

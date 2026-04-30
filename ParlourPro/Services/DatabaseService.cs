@@ -245,5 +245,46 @@ namespace ParlourPro.Services
 
             return results;
         }
+
+        public async Task<List<ServiceEntry>> GetBillHistoryAsync(string text, string status)
+        {
+            await Init();
+            var query = _database.Table<ServiceEntry>();
+
+            // Apply status filter
+            if (status == "Active")
+            {
+                query = query.Where(x => x.Status == status || string.IsNullOrEmpty(x.Status));
+            }
+            else if (status != "All")
+            {
+                query = query.Where(x => x.Status == status);
+            }
+
+            // Apply search text filter
+            if (!string.IsNullOrWhiteSpace(text))
+            {
+                query = query.Where(x => x.CustomerName.Contains(text) || x.BillId.Contains(text));
+            }
+
+            return await query.OrderByDescending(x => x.EntryDate).ToListAsync();
+        }
+
+        // Updates the status of a bill to Cancelled instead of deleting
+        public async Task<int> CancelBillAsync(ServiceEntry bill)
+        {
+            await Init();
+            bill.Status = "Cancelled";
+            // Updates the existing record with new status
+            return await _database.UpdateAsync(bill);
+        }
+
+        public async Task<int> UpdateBillStatusAsync(ServiceEntry bill, string newStatus)
+        {
+            await Init();
+            bill.Status = newStatus;
+            // We update the record instead of deleting it
+            return await _database.UpdateAsync(bill);
+        }
     }
 }

@@ -39,6 +39,24 @@
                 </Grid>
 
                 <Label Text="--- Visit Again ---" HorizontalOptions="Center" Margin="0,40,0,0" TextColor="Black"/>
+
+                <Button Text="Cancel This Bill"
+                        Command="{Binding CancelBillCommand}"
+                        CommandParameter="{Binding Bill}"
+                        BackgroundColor="White"
+                        TextColor="Red"
+                        BorderColor="Red"
+                        BorderWidth="1"
+                        Margin="20"
+                        CornerRadius="10"
+                        VerticalOptions="End">
+
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button" Binding="{Binding Bill.Status}" Value="Cancelled">
+                            <Setter Property="IsVisible" Value="False" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
             </VerticalStackLayout>
         </Frame>
     </ScrollView>

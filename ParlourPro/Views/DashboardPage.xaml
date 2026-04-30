@@ -16,7 +16,7 @@
                FontSize="28" 
                FontAttributes="Bold" 
                TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryText_Dark}}" 
-               FontFamily="OpenSansBold"/>
+               FontFamily="OpenSansSemibold"/>
 
                     <Label Text="Quick &amp; Smart Billing | Services &amp; Academy Manager" 
                FontSize="12" 
@@ -35,7 +35,7 @@
                     <Label Text="Today's Collection" TextColor="White" FontAttributes="Bold"/>
                     <Label Text="{Binding TodayEarning}" FontSize="32" FontAttributes="Bold" TextColor="White"/>
                     <Label Text="This Month's Collection" TextColor="White" FontAttributes="Bold"/>
-                    <Label Text="{Binding TodayEarning}" FontSize="32" FontAttributes="Bold" TextColor="White"/>
+                    <Label Text="{Binding MonthlyEarning}" FontSize="32" FontAttributes="Bold" TextColor="White"/>
                 </VerticalStackLayout>
             </Border>
 

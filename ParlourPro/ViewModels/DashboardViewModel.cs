@@ -59,15 +59,33 @@ namespace ParlourPro.ViewModels
 
         public async Task LoadEarnings()
         {
-            //var today = await _databaseService.GetCollectionAsync(DateTime.Today, DateTime.Now);
-            //TodayEarning = $"₹{today:N2}";
+            //////var today = await _databaseService.GetCollectionAsync(DateTime.Today, DateTime.Now);
+            //////TodayEarning = $"₹{today:N2}";
 
-            var today = await _databaseService.GetCollectionAsync(DateTime.Today, DateTime.Now);
-            var firstDayOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-            var monthly = await _databaseService.GetCollectionAsync(firstDayOfMonth, DateTime.Now);
+            ////var today = await _databaseService.GetCollectionAsync(DateTime.Today, DateTime.Now);
+            ////var firstDayOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            ////var monthly = await _databaseService.GetCollectionAsync(firstDayOfMonth, DateTime.Now);
+
+            var allBills = await _databaseService.GetBillHistoryAsync();
+
+            // Filter: Sirf Active bills aur isi mahine ke
+            var currentMonth = DateTime.Now.Month;
+            var currentYear = DateTime.Now.Year;
+
+            var monthly = allBills
+                .Where(x => x.Status == "Active" &&
+                            x.EntryDate.Month == currentMonth &&
+                            x.EntryDate.Year == currentYear)
+                .Sum(x => x.GrandTotal);
+
+            var today = allBills
+                .Where(x => x.Status == "Active" &&
+                            x.EntryDate.Date == DateTime.Today)
+                .Sum(x => x.GrandTotal);
 
             TodayEarning = $"₹{today:F2}";
             MonthlyEarning = $"₹{monthly:F2}";
         }
+                
     }
 }

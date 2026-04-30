@@ -278,22 +278,22 @@ namespace ParlourPro.ViewModels
 
                     bool canOpenWhatsApp = await Launcher.Default.CanOpenAsync(url);
 
-                    if (canOpenWhatsApp)
-                    {
-                        await Launcher.Default.OpenAsync(url);
-                    }
-                    else
-                    {
-                        // 2. If WhatsApp not found, try SMS
-                        await Launcher.Default.OpenAsync($"sms:{Mobile}?body={Uri.EscapeDataString(message)}");
-                    }
+                    //if (canOpenWhatsApp)
+                    //{
+                    //    await Launcher.Default.OpenAsync(url);
+                    //}
+                    //else
+                    //{
+                    //    // 2. If WhatsApp not found, try SMS
+                    //    await Launcher.Default.OpenAsync($"sms:{Mobile}?body={Uri.EscapeDataString(message)}");
+                    //}
 
-                    // Step 6: Share Receipt Image
-                    await Share.Default.RequestAsync(new ShareFileRequest
-                    {
-                        Title = "Share Bill",
-                        File = new ShareFile(filePath)
-                    });
+                    //// Step 6: Share Receipt Image
+                    //await Share.Default.RequestAsync(new ShareFileRequest
+                    //{
+                    //    Title = "Share Bill",
+                    //    File = new ShareFile(filePath)
+                    //});
 
                     //await Shell.Current.DisplayAlert("Success", "Bill saved and form cleared!", "OK");
                     // Reset for next customer

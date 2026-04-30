@@ -7,9 +7,13 @@
              Title="History"
              NavigationPage.HasNavigationBar="False"
              BackgroundColor="{AppThemeBinding Light={StaticResource PageBG}, Dark={StaticResource PageBG_Dark}}">
-    <Grid RowDefinitions="Auto, *">
+
+    <!-- Main Page Structure -->
+    <Grid RowDefinitions="Auto, Auto, Auto, *">
+
+        <!-- Header Section -->
         <HorizontalStackLayout Grid.Row="0" Spacing="15" Padding="15" BackgroundColor="{StaticResource Primary}">
-            <Frame HeightRequest="40" WidthRequest="40" CornerRadius="20" Padding="0" BorderColor="LightGray" VerticalOptions="Start">
+            <Frame HeightRequest="40" WidthRequest="40" CornerRadius="20" Padding="0" BorderColor="LightGray" VerticalOptions="Center">
                 <Image Source="bizzbilllogo1.png" Aspect="AspectFill"/>
             </Frame>
             <VerticalStackLayout VerticalOptions="Center">
@@ -18,30 +22,149 @@
             </VerticalStackLayout>
         </HorizontalStackLayout>
 
-        <VerticalStackLayout Grid.Row="1" Padding="15" Spacing="10">
-            <SearchBar x:Name="searchBar" Placeholder="Search Name or Bill ID..." 
-                       SearchCommand="{Binding SearchCommand}" 
-                       SearchCommandParameter="{Binding Source={x:Reference searchBar}, Path=Text}" />
+        <!-- Search Bar Section -->
+        <SearchBar x:Name="searchBar" 
+                   Grid.Row="1" 
+                   Margin="15,10,15,0"
+                   Placeholder="Search Name or Bill ID..." 
+                   Text="{Binding CurrentSearchText}"
+                   SearchCommand="{Binding SearchCommand}" 
+                   SearchCommandParameter="{Binding Source={x:Reference searchBar}, Path=Text}" />
 
-            <CollectionView ItemsSource="{Binding BillHistory}" VerticalOptions="FillAndExpand">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="models:ServiceEntry">
-                        <Frame Margin="0,5" Padding="15" CornerRadius="12" BorderColor="Transparent"
-                               BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource CardBG_Dark}}">
-                            <Frame.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HistoryViewModel}}, Path=ViewBillDetailsCommand}" CommandParameter="{Binding .}"/>
-                            </Frame.GestureRecognizers>
-                            <Grid ColumnDefinitions="*, Auto">
-                                <VerticalStackLayout Grid.Column="0">
-                                    <Label Text="{Binding CustomerName}" FontSize="18" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}"/>
-                                    <Label Text="{Binding BillId}" FontSize="12" TextColor="Gray"/>
-                                </VerticalStackLayout>
-                                <Label Grid.Column="1" Text="{Binding GrandTotal, StringFormat='₹{0:N0}'}" FontSize="18" FontAttributes="Bold" TextColor="Teal" VerticalOptions="Center"/>
-                            </Grid>
-                        </Frame>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </VerticalStackLayout>
+        <!-- Horizontal Filter Chips -->
+        <ScrollView Grid.Row="2" 
+                    Orientation="Horizontal" 
+                    HorizontalScrollBarVisibility="Never" 
+                    Margin="15,10">
+            <HorizontalStackLayout Spacing="10">
+
+                <!-- All Filter -->
+                <Border StrokeShape="RoundRectangle 20" Padding="15,5" StrokeThickness="1">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding FilterStatusCommand}" CommandParameter="All"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="All">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label" Binding="{Binding SelectedFilter}" Value="All">
+                                <Setter Property="TextColor" Value="Green" />
+                                <Setter Property="FontAttributes" Value="Bold" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border" Binding="{Binding SelectedFilter}" Value="All">
+                            <Setter Property="Stroke" Value="Green" />
+                            <Setter Property="BackgroundColor" Value="#E8F5E9" />
+                        </DataTrigger>
+                    </Border.Triggers>
+                </Border>
+
+                <!-- Active Filter -->
+                <Border StrokeShape="RoundRectangle 20" Padding="15,5" StrokeThickness="1">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding FilterStatusCommand}" CommandParameter="Active"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="Active">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label" Binding="{Binding SelectedFilter}" Value="Active">
+                                <Setter Property="TextColor" Value="Green" />
+                                <Setter Property="FontAttributes" Value="Bold" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border" Binding="{Binding SelectedFilter}" Value="Active">
+                            <Setter Property="Stroke" Value="Green" />
+                            <Setter Property="BackgroundColor" Value="#E8F5E9" />
+                        </DataTrigger>
+                    </Border.Triggers>
+                </Border>
+
+                <!-- Cancelled Filter -->
+                <Border StrokeShape="RoundRectangle 20" Padding="15,5" StrokeThickness="1">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding FilterStatusCommand}" CommandParameter="Cancelled"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="Cancelled">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label" Binding="{Binding SelectedFilter}" Value="Cancelled">
+                                <Setter Property="TextColor" Value="Green" />
+                                <Setter Property="FontAttributes" Value="Bold" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border" Binding="{Binding SelectedFilter}" Value="Cancelled">
+                            <Setter Property="Stroke" Value="Green" />
+                            <Setter Property="BackgroundColor" Value="#E8F5E9" />
+                        </DataTrigger>
+                    </Border.Triggers>
+                </Border>
+            </HorizontalStackLayout>
+        </ScrollView>
+
+        <!-- CollectionView (Scrolling Fixed here) -->
+        <CollectionView Grid.Row="3" 
+                        ItemsSource="{Binding BillHistory}" 
+                        Margin="10,0"
+                        VerticalScrollBarVisibility="Always">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:ServiceEntry">
+                    <Frame Margin="5" Padding="15" CornerRadius="12" BorderColor="Transparent"
+                           BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource CardBG_Dark}}">
+
+                        <Frame.Triggers>
+                            <DataTrigger TargetType="Frame" Binding="{Binding Status}" Value="Cancelled">
+                                <Setter Property="BackgroundColor" Value="#FFE5E5" />
+                                <Setter Property="Opacity" Value="0.8" />
+                            </DataTrigger>
+                            <!-- Resetting background for Active to avoid black boxes -->
+                            <DataTrigger TargetType="Frame" Binding="{Binding Status}" Value="Active">
+                                <Setter Property="BackgroundColor" Value="White" />
+                            </DataTrigger>
+                        </Frame.Triggers>
+
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HistoryViewModel}}, Path=ViewBillDetailsCommand}" 
+                                                  CommandParameter="{Binding .}"/>
+                        </Frame.GestureRecognizers>
+
+                        <Grid ColumnDefinitions="*, Auto" ColumnSpacing="15">
+                            <VerticalStackLayout Grid.Column="0" VerticalOptions="Center" Spacing="2">
+                                <Label Text="{Binding CustomerName}" 
+                                       FontSize="17" 
+                                       FontAttributes="Bold" 
+                                       LineBreakMode="TailTruncation"
+                                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}"/>
+
+                                <Label Text="{Binding BillId, StringFormat='ID: {0}'}" 
+                                       FontSize="11" 
+                                       TextColor="Gray"/>
+
+                                <Label Text="CANCELLED" 
+                                       TextColor="Red" 
+                                       FontSize="11"
+                                       FontAttributes="Bold"
+                                       IsVisible="False">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Cancelled">
+                                            <Setter Property="IsVisible" Value="True" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </VerticalStackLayout>
+
+                            <Label Grid.Column="1" 
+                                   Text="{Binding GrandTotal, StringFormat='₹{0:N0}'}" 
+                                   FontSize="18" 
+                                   FontAttributes="Bold" 
+                                   TextColor="Teal" 
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="End"/>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
     </Grid>
 </ContentPage>
